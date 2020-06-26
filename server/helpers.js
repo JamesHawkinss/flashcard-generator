@@ -1,6 +1,8 @@
 const { createCanvas } = require('canvas');
 const fs = require('fs');
 
+const padding = 100;
+
 function getLines(ctx, text, maxWidth) {
     var words = text.split(" ");
     var lines = [];
