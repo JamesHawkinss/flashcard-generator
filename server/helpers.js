@@ -1,8 +1,6 @@
 const { createCanvas } = require('canvas');
 const fs = require('fs');
 
-const padding = 100;
-
 function getLines(ctx, text, maxWidth) {
     var words = text.split(" ");
     var lines = [];
@@ -32,7 +30,6 @@ function draw(text, folderName, type) {
     ctx.fillStyle = "#000";
     ctx.font = '50px Arial'
     ctx.textAlign = "center";
-    //ctx.textBaseline = "middle";
     
     let lines = getLines(ctx, text, canvas.width-10);
     const offset = ((lines.length * 50) / 2);
@@ -46,15 +43,7 @@ function draw(text, folderName, type) {
     stream.on('finish', () => console.log(`${type} ${folderName} done`));
 }
 
-
-const contents = JSON.parse(fs.readFileSync('./contents.json'));
-contents.forEach((content, i) => {
-    if (content.hasOwnProperty("question")) {
-        draw(content.question, i, "question")
-    }
-
-    if (content.hasOwnProperty("answer")) {
-        draw(content.answer, i, "answer")
-    }
-});
-
+module.exports = {
+    getLines,
+    draw
+}
