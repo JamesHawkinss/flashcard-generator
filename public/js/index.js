@@ -14,3 +14,11 @@ function addChild() {
     element.append(answer);
     elements.appendChild(element);
 }
+
+function createFlashcard(question, answer) {
+
+}
+
+function getFlashcard(id) {
+
+}
