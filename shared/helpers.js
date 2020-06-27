@@ -40,7 +40,7 @@ function draw(text, folderName, type) {
     const stream = fs.createWriteStream(`./${folderName}/${type}.png`);
     const canvasStream = canvas.createPNGStream();
     canvasStream.pipe(stream);
-    stream.on('finish', () => console.log(`${type} ${folderName} done`));
+    stream.on('finish', () => {});
 }
 
 function generateUuid() {
