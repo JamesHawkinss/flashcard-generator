@@ -1,9 +1,11 @@
 const router = require('express').Router();
 const helpers = require('../shared/helpers');
 
-//const {} = require('./routes');
+const { createFlashcard, getFlashcard } = require('./routes');
 
 // methods
-router.get('/hi', (req, res) => { console.log(helpers.generateUuid()) })
+//router.get('/uuidgen', (req, res) => { console.log(helpers.generateUuid()) })
+router.post('/create', createFlashcard);
+router.get('/:uuid', getFlashcard);
 
 module.exports = router;
