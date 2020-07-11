@@ -10,5 +10,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', express.static('../public'));
 app.use('/api', router);
+app.use('/cards', express.static('../content'));
 
 app.listen(config.server.port, () => console.log(`Listening on :${config.server.port}`));

@@ -1,5 +1,6 @@
 const { createCanvas } = require('canvas');
 const fs = require('fs');
+const uuid = require('uuid');
 
 function getLines(ctx, text, maxWidth) {
     var words = text.split(" ");
@@ -21,36 +22,32 @@ function getLines(ctx, text, maxWidth) {
 }
 
 function draw(text, folderName, type) {
-    fs.mkdirSync(`./${folderName}`, { recursive: true });
-    const canvas = createCanvas(1000, 500);
-    const ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#000";
-    ctx.font = '50px Arial'
-    ctx.textAlign = "center";
+    return new Promise((resolve, reject) => {
+        fs.mkdirSync(`./${folderName}`, { recursive: true });
+        const canvas = createCanvas(1000, 500);
+        const ctx = canvas.getContext('2d');
     
-    let lines = getLines(ctx, text, canvas.width-10);
-    const offset = ((lines.length * 50) / 2);
-    lines = lines.join('\n');
-    
-    ctx.fillText(lines, (canvas.width / 2), (canvas.height / 2) - offset)
-    
-    const stream = fs.createWriteStream(`./${folderName}/${type}.png`);
-    const canvasStream = canvas.createPNGStream();
-    canvasStream.pipe(stream);
-    stream.on('finish', () => {});
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#000";
+        ctx.font = '50px Arial'
+        ctx.textAlign = "center";
+        
+        let lines = getLines(ctx, text, canvas.width-10);
+        const offset = ((lines.length * 50) / 2);
+        lines = lines.join('\n');
+        
+        ctx.fillText(lines, (canvas.width / 2), (canvas.height / 2) - offset)
+        
+        const stream = fs.createWriteStream(`./${folderName}/${type}.png`);
+        stream.on('finish', () => resolve());
+        const canvasStream = canvas.createPNGStream();
+        canvasStream.pipe(stream);
+    });
 }
 
 function generateUuid() {
-    let s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    return uuid.v4();
 }
 
 module.exports = {

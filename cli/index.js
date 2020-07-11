@@ -10,12 +10,12 @@ const rl = readline.createInterface({
 
 rl.question(
     `==========\n1) Use the CLI interface\n2) Read directly from the contents.json file and create flashcards\n===========\nInput >> `, 
-    (choice) => {
+    async (choice) => {
         if (choice == "1") {
             const contents = [];
             const askQuestion = () => rl.question(
                 `===========\n1) Add new flashcard\n2) Generate flashcards\n==========\nInput >> `,
-                (choice) => {
+                async (choice) => {
                     if (choice == "1") {
                         rl.question(`Question >> Enter question\nInput >> `, (q) => {
                             rl.question(`Answer >> Enter answer\nInput >> `, (a) => {
@@ -24,14 +24,16 @@ rl.question(
                             })
                         })
                     } else if (choice == "2") {
-                        contents.forEach((content, i) => {
+                        const thing = contents.map(async (content, i) => {
                             if (content.hasOwnProperty("question")) {
-                                draw(content.question, `${i}`, "question")
+                                await draw(content.question, `${i}`, "question");
                             }
                             if (content.hasOwnProperty("answer")) {
-                                draw(content.answer, `${i}`, "answer")
+                                await draw(content.answer, `${i}`, "answer")
                             }
                         });
+
+                        await Promise.all(thing);
 
                         console.log("Exit >> Operation complete!");
                         rl.close();
@@ -47,14 +49,16 @@ rl.question(
                 return console.log("Error >> contents.json is invalid!")
             }
 
-            contents.forEach((content, i) => {
+            const thing2 = contents.map(async (content, i) => {
                 if (content.hasOwnProperty("question")) {
-                    draw(content.question, `${i}`, "question")
+                    await draw(content.question, `${i}`, "question");
                 }
                 if (content.hasOwnProperty("answer")) {
-                    draw(content.answer, `${i}`, "answer")
+                    await draw(content.answer, `${i}`, "answer")
                 }
             });
+
+            await Promise.all(thing2);
 
             console.log("Exit >> Operation complete!")
             rl.close();
