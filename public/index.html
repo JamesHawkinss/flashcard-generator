@@ -17,11 +17,10 @@
         {{/if}}
     </script>
 
-    <script type="text/x-handlebars-template" id="createFlashcardsResultTemplate">
-        <p>hiya</p>
-        {{#each this}} 
-        <p>{{question}}</p>
-        <p>{{answer}}</p>
+    <script type="text/html" id="createFlashcardsResultTemplate">
+        {{#each data}}
+        <a href="{{question}}"><img src="{{question}}" style="width:25%; border-style: solid;" /></a><!--
+        --><a href="{{answer}}"><img src="{{answer}}" style="width:25%; border-style: solid;" /></a><br>
         {{/each}}
     </script>
 </head>

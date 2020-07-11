@@ -34,9 +34,9 @@ function addChild() {
     elements.appendChild(element);
 }
 
-function createFlashcards() {
+async function createFlashcards() {
     const flashcards = [];
-    const urls = [];
+    const urls = []; // 1. makes urls
 
     const cardCreatorsChildren = document.getElementById("card-creators").children;
     var question = "";
@@ -57,26 +57,27 @@ function createFlashcards() {
     }
     
     for (let i = 0; i < flashcards.length; i++) {
-        fetch(`/api/create`, {
-            "method": "POST",
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": JSON.stringify(flashcards[i])
-        })
-        .then((res) => res.json())
-        .then((data) => {
+        try {
+            var data = await fetch(`/api/create`, {
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": JSON.stringify(flashcards[i])
+            });
+            data = await data.json();
             urls.push({
                 uuid: data.uuid,
                 question: data.paths.question,
                 answer: data.paths.answer
             });
-        })
-        .catch((err) => console.log(err));
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     document.getElementById("createFlashcardsResult").innerHTML = "";
-    document.getElementById("createFlashcardsResult").innerHTML = createFlashcardsResultTemplate(urls);
+    document.getElementById("createFlashcardsResult").innerHTML = createFlashcardsResultTemplate({ data: urls });
 }
 
 function getFlashcard() {
