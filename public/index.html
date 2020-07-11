@@ -9,21 +9,28 @@
 
     <script type="text/html" id="getFlashcardResult">
         {{#if paths}}
-        <img src="{{paths.answer}}" style="width:25%; border-style: solid;"></p>
-        <img src="{{paths.question}}" style="width:25%; border-style: solid;"></p>
+        <a href="{{paths.question}}"><img src="{{paths.question}}" style="width:25%; border-style: solid;" /></a>
+        <a href="{{paths.answer}}"><img src="{{paths.answer}}" style="width:25%; border-style: solid;" /></a>
         {{/if}}
         {{#if stack}}
         <p>Error: {{stack}}
         {{/if}}
+    </script>
+
+    <script type="text/x-handlebars-template" id="createFlashcardsResultTemplate">
+        <p>hiya</p>
+        {{#each this}} 
+        <p>{{question}}</p>
+        <p>{{answer}}</p>
+        {{/each}}
     </script>
 </head>
 <body>
     <button onclick="toggleFunction('findCard')">toggle get flashcard</button>
     <button onclick="toggleFunction('createCards')">toggle create flashcards</button>
 
-    <button onclick="addChild()">hiya</button>
-    <button onclick="getFlashcard('2158043d-dba8-453c-732f-144bde87cd9f')">weewoo</button>
-    <div id="card-creators"></div>
+    <!--<button onclick="addChild()">hiya</button>
+    <div id="card-creators"></div>-->
 
     <div id="findCard" hidden>
         <label for="findCardUuid">Card ID</label>
@@ -32,7 +39,21 @@
         <div id="findCardResults"></div>
     </div>
     
-    <div id="createCards" hidden></div>
+    <div id="createCards" hidden>
+        <div id="card-creators">
+            <div id="card-creator">
+                <label for="question">Question</label>
+                <input type="text" id="question" name="question" placeholder="Question">
+                <label for="answer">Answer</label>
+                <input type="text" id="answer" name="answer" placeholder="Answer">
+            </div>
+        </div>
+        
+        <button onclick="createFlashcards()">Submit</button>
+        <button onclick="addChild()">New (+)</button>
+
+        <div id="createFlashcardsResult"></div>
+    </div>
 
     <script src="js/index.js"></script>
 </body>
