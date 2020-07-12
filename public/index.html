@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css" />
     <title>Flashcard Generator</title>
 
     <script type="text/html" id="getFlashcardResult">
         {{#if paths}}
-        <a href="{{paths.question}}"><img src="{{paths.question}}" style="width:25%; border-style: solid;" /></a>
-        <a href="{{paths.answer}}"><img src="{{paths.answer}}" style="width:25%; border-style: solid;" /></a>
+        <a href="{{paths.question}}" target="_blank"><img src="{{paths.question}}" style="width:25%; border-style: solid;" /></a>
+        <a href="{{paths.answer}}" target="_blank"><img src="{{paths.answer}}" style="width:25%; border-style: solid;" /></a>
+        <button onclick="printCards({{{json paths}}})">Print Flashcards</button>
         {{/if}}
         {{#if stack}}
         <p>Error: {{stack}}
@@ -19,39 +22,41 @@
 
     <script type="text/html" id="createFlashcardsResultTemplate">
         {{#each data}}
-        <a href="{{question}}"><img src="{{question}}" style="width:25%; border-style: solid;" /></a><!--
-        --><a href="{{answer}}"><img src="{{answer}}" style="width:25%; border-style: solid;" /></a><br>
+        <h3>{{uuid}}</h3>
+        <a href="{{question}}" target="_blank"><img src="{{question}}" style="width:25%; border-style: solid;" /></a><!--
+        --><a href="{{answer}}" target="_blank"><img src="{{answer}}" style="width:25%; border-style: solid;" /></a><br>
         {{/each}}
     </script>
 </head>
 <body>
-    <button onclick="toggleFunction('findCard')">toggle get flashcard</button>
-    <button onclick="toggleFunction('createCards')">toggle create flashcards</button>
+    <h1>Flashcard Generator</h1>
 
-    <!--<button onclick="addChild()">hiya</button>
-    <div id="card-creators"></div>-->
-
-    <div id="findCard" hidden>
-        <label for="findCardUuid">Card ID</label>
-        <input type="text" id="findCardUuid" name="findCardUuid" placeholder="Card ID"><!--
-        --><button onclick="getFlashcard()">Submit</button>
-        <div id="findCardResults"></div>
-    </div>
-    
-    <div id="createCards" hidden>
-        <div id="card-creators">
-            <div id="card-creator">
-                <label for="question">Question</label>
-                <input type="text" id="question" name="question" placeholder="Question">
-                <label for="answer">Answer</label>
-                <input type="text" id="answer" name="answer" placeholder="Answer">
+    <div class="getFlashcards">
+        <button onclick="toggleFunction('findCard')">toggle get flashcard</button>
+        <div id="findCard" hidden>
+            <label for="findCardUuid">Card ID</label>
+            <input type="text" id="findCardUuid" name="findCardUuid" placeholder="Card ID"><!--
+            -->   <button onclick="getFlashcard()">Submit</button>
+            <div id="findCardResults">
             </div>
         </div>
-        
-        <button onclick="createFlashcards()">Submit</button>
-        <button onclick="addChild()">New (+)</button>
-
-        <div id="createFlashcardsResult"></div>
+    </div>
+    
+    <div class="createFlashcards">
+        <button onclick="toggleFunction('createCards')">toggle create flashcards</button>
+        <div id="createCards" hidden>
+            <div id="card-creators">
+                <div id="card-creator">
+                    <label for="question">Question</label>
+                    <input type="text" id="question" name="question" placeholder="Question">
+                    <label for="answer">Answer</label>
+                    <input type="text" id="answer" name="answer" placeholder="Answer">
+                </div>
+            </div>
+            <button onclick="createFlashcards()">Create</button>
+            <button onclick="addChild()">Add Card</button>
+            <div id="createFlashcardsResult"></div>
+        </div>
     </div>
 
     <script src="js/index.js"></script>

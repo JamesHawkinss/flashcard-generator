@@ -4,26 +4,25 @@ var createFlashcardsResultTemplate = Handlebars.compile(document.getElementById(
 function addChild() {
     const elements = document.getElementById("card-creators");
     const element = document.createElement("div");
-    const question = document.createElement("input");
-    const questionLabel = document.createElement("label");
-    const answer = document.createElement("input");
-    const answerLabel = document.createElement("label");
-
     element.classList.add("card-creator");
-
+    
+    const question = document.createElement("input");
     question.classList.add("option");
     question.setAttribute("type", "text");
     question.setAttribute("name", "question");
     question.setAttribute("placeholder", "Question");
-
+    
+    const answer = document.createElement("input");
     answer.classList.add("option");
     answer.setAttribute("type", "text");
     answer.setAttribute("name", "answer");
     answer.setAttribute("placeholder", "Answer");
-
+    
+    const questionLabel = document.createElement("label");
     questionLabel.innerHTML = "Question ";
     questionLabel.setAttribute("for", "question");
-
+    
+    const answerLabel = document.createElement("label");
     answerLabel.innerHTML = " Answer ";
     answerLabel.setAttribute("for", "answer");
     
@@ -36,7 +35,7 @@ function addChild() {
 
 async function createFlashcards() {
     const flashcards = [];
-    const urls = []; // 1. makes urls
+    const urls = [];
 
     const cardCreatorsChildren = document.getElementById("card-creators").children;
     var question = "";
@@ -44,19 +43,22 @@ async function createFlashcards() {
 
     for (let i = 0; i < cardCreatorsChildren.length; i++) {
         for (let j = 0; j < cardCreatorsChildren[i].children.length; j++) {
-            if (cardCreatorsChildren[i].children[j].tagName == "INPUT") {
-                if (cardCreatorsChildren[i].children[j].id == "question") {
-                    question = cardCreatorsChildren[i].children[j].value;
+            let child = cardCreatorsChildren[i].children[j];
+            if (child.tagName == "INPUT") {
+                if (child.id == "question") {
+                    question = child.value;
+                    child.value = "";
                 } else {
-                    answer = cardCreatorsChildren[i].children[j].value;
+                    answer = child.value;
+                    child.value = "";
                 }
-
             }
         }
         flashcards.push({ question, answer });
     }
     
     for (let i = 0; i < flashcards.length; i++) {
+        if (flashcards[i].question == "" || flashcards[i].answer == "") continue;
         try {
             var data = await fetch(`/api/create`, {
                 "method": "POST",
@@ -95,4 +97,21 @@ function getFlashcard() {
 
 function toggleFunction(name) {
     document.getElementById(name).toggleAttribute("hidden");
+}
+
+Handlebars.registerHelper('json', function (context) {
+    console.log(context);
+    return JSON.stringify(context).replace(/"/g, '&quot;');
+});
+
+function printCards(paths) {
+    console.log(paths);
+    printJS({
+        printable: [paths.question, paths.answer],
+        type: 'image',
+        header: 'Flashcard Generator',
+        maxWidth: 2000,
+        style: 'width:50%;margin-bottom:20px;border: 1px solid black;',
+        targetStles: ['*']
+    });
 }
